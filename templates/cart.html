@@ -1,0 +1,80 @@
+{% extends "index.html" %}
+{% block content %}
+<style>
+    .itemcontainer{
+        width:90%;
+        height: 100%;
+        padding: 30px;
+        border: 1px solid black;
+        border-radius: 30px;
+        
+
+
+    }
+    .row{
+        height: auto;
+    }
+    .itemcontainer h3{
+        text-decoration: underline;
+    }
+    .chk tr{
+        height: 40px;
+    
+    }
+    
+</style>
+
+<div class="container mt-5">
+<div class="row">
+    <div class="col-md-8">
+        <div class="itemcontainer">
+            <h3>Cart Items</h3><br><br>
+            <table class="table">
+                <tr>
+                    <th>Item</th>
+                    <th style="border-left:.5px solid black ;">Price</th>
+                    <th>Quantity</th>
+                    <th>Remove</th>
+                </tr>
+                
+                {% for item in cart  %}
+                    
+                    
+                <tr>
+                    <td>{{item.product.name}}</td>
+                    <td style="border-left:.5px solid black ;">{{item.price}}</td>
+                    <td><a href="{%url 'DecreaseCartQunty' item.id %}" class="btn btn-danger btn-sm">-</a> <input type="text" style="width:25px;height:25px;border:none" value="{{item.quantity}}" readonly> <a href="{%url 'IncreaseCartQunty' item.id %}" class="btn btn-success btn-sm">+</a></td>
+                    <td><a href="{%url 'DeleteCart' item.id %}" class="btn btn-danger">X</a></td>
+                </tr>
+                {% endfor %}
+
+            </table>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="itemcontainer chk">
+            <h3>Check Out</h3><br><br>
+            <table>
+                <tr>
+                    <th>Amout:</th>
+                    <td>{{price}}</td>
+                </tr>
+                <tr>
+                    <th>Total Items</th>
+                    <td>{{cartlen}}</td>
+                </tr>
+                <tr style="border-top:1px solid black">
+                    <th><h4>Total Amount:</h4></th>
+                    <td><b><h4> {{price}} </h4></b></td>
+                </tr>
+            </table>
+            <br>
+            <a href="{%url 'CheckOut' %}" class="btn btn-warning">Proceed To Check Out</a>
+        </div>
+
+    </div>
+
+</div>
+</div>
+  <br><br><br>
+{% endblock %}

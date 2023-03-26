@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="logincontainer">
+        <br><br>
+        <div class="formcontainer">
+            <h3>Login</h3>
+            
+            {% for m in messages  %}
+            <h6 style="color:pink">{{m}}</h6>
+                
+            {% endfor %}
+                
+            <br>
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" placeholder="User name" name="uname"><br><br>
+                <input type="password" placeholder="password" name="pswd"><br><br>
+                <button type="submit" class="btn btn-outline-info">Login</button><br>
+            </form>
+            dont have an account click <a href="{%url 'SignUp' %}">Here</a>
+        </div>
+        <br><br>
+    </div>
+</div>
+
+{% endblock %}

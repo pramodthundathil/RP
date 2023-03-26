@@ -1,0 +1,36 @@
+{% extends "merchant_Index.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <table class="table">
+        <tr>
+            <th>Ordered Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>date</th>
+            <th>Status</th>
+            <th>View Customer</th>
+            <th>Actions</th>
+        </tr>
+
+        {% for i in order %}
+
+        <tr>
+            <td>{{i.Product.name}}</td>
+            <td>{{i.quantity}}</td>
+            <td>{{i.price}}</td>
+            <td>{{i.date}}</td>
+            <td>{{i.status}}</td>
+            <td><a href="" class="btn btn-outline-dark">View</a></td>
+            <td><a href="" class="btn btn-outline-info btn-sm">Despach</a>
+                <a href="" class="btn btn-outline-warning btn-sm">Cancel</a>
+                <a href="" class="btn btn-outline-danger btn-sm">Delete</a>
+                <a href="" class="btn btn-outline-success btn-sm">Delivered</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+</div>
+<br><br>
+{% endblock %}

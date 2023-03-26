@@ -1,0 +1,74 @@
+{% extends "index.html" %}
+{% block content %}
+<style>
+    .itemcontainer{
+        width: 70%;
+        margin: auto;
+        margin-top: 5%;
+        border: 1px solid black;
+        border-radius: 20px;
+        padding: 20px;
+    }
+    .itemcontainer input{
+        width: 90%;
+        padding: 5px;
+    }
+</style>
+
+<div class="container">
+    
+    {% for m in messages %}
+    <h5 style="color:red;text-align:center">{{m}}</h5>
+        
+    {% endfor %}
+        
+    <div class="itemcontainer">
+        <h3><u> Profile </u></h3><br>
+        <form method="post">
+            {% csrf_token %}
+        <table class="table">
+            <tr>
+                <th>Name:</th>
+                <td><input type="text" placeholder="Enetr Your name" value="{{prodata.name}}" name="name"></td>
+            </tr>
+            <tr>
+                <th>House:</th>
+                <td><input type="text" placeholder="House" value="{{prodata.House}}" name="house"></td>
+            </tr>
+            <tr>
+                <th>Place:</th>
+                <td>{{prodata.place}}</td>
+            </tr>
+            <tr>
+                <th>City:</th>
+                <td>{{prodata.city}}</td>
+            </tr>
+            <tr>
+                <th>District:</th>
+                <td>{{prodata.district}}</td>
+            </tr>
+            <tr>
+                <th>State:</th>
+                <td>{{prodata.state}}</td>
+            </tr>
+            <tr>
+                <th>PINCODE:</th>
+                <td><input type="number" placeholder="Pincode" value="{{prodata.pincode}}" list="items" name="pin"></td>
+                <datalist id="items">
+                    {% for i in pincode %}
+                        <option value="{{i}}">
+                    {% endfor %}
+                </datalist>
+            </tr>
+            <tr>
+                <th>Phone:</th>
+                <td><input type="number" value="{{prodata.phone}}" placeholder="Phone number" name="phone"></td>
+            </tr>
+        </table>
+        <button type="submit" class="btn btn-info btn-lg">Upadte Data</button>
+    </form>
+        
+    </div>
+</div>
+ <br><br><br> 
+{% endblock %}

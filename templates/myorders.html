@@ -1,0 +1,34 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="container mt-5">
+    {% for m in messages %}
+    <h5 style="color:red;text-align:center">{{m}}</h5>
+        
+    {% endfor %}
+    <table class="table table-borderd-dark">
+        <tr>
+            <th>Product</th>
+            <th>Date</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>delete</th>
+        </tr>
+        
+        {% for i in order  %}
+            
+            
+        <tr>
+            <td>{{i.Product.name}}</td>
+            <td>{{i.date}}</td>
+            <td>{{i.quantity}}</td>
+            <td>{{i.price}}</td>
+            <td>{{i.status}}</td>
+            <td><a href="{%url 'deleteorderedhistory' i.id%}" class="btn btn-outline-danger btn-small" >delete</a></td>
+        </tr>
+        {% endfor %}
+
+    </table>
+</div>
+  
+{% endblock  %}

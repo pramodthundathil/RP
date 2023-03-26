@@ -1,0 +1,25 @@
+{% extends "index.html" %}
+{% block content %}
+<style>
+    input{
+        padding: 5px;
+        width: 25%;
+    }
+</style>
+
+<div class="container mt-5 text-center">
+    <form action="{%url 'searchBypincode' %}" method="post">
+        {% csrf_token %}
+        <label for="">Search By Pincode:</label><br><br>
+    <input type="Number" name="pincode" placeholder="Pincode" value="{{postal}}" id=""><button class="btn btn-outline-success">Search</button>
+    </form>
+    <br><br><br>
+    <form action="{%url 'SearchByDistrict' %}" method="post">
+        {% csrf_token %}
+        <label for="">Search By City:</label> <br><br>
+        <input type="text" name="city" placeholder="Pincode" value="{{place}}" id=""><button type="submit" class="btn btn-outline-success">Search</button>
+    </form>
+</div>
+
+  <br><br><br>
+{% endblock  %}

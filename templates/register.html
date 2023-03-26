@@ -1,0 +1,32 @@
+{% extends "index.html" %}
+{% block content %}
+<style>
+    ul{
+        list-style: none;
+    }
+</style>
+<div class="container-fluid">
+    <div class="logincontainer">
+        <br><br>
+        <div class="formcontainer">
+            <h3>Registration</h3>
+            <h6 style="color:red">{{form.errors}}</h6>
+            <br>
+            <form method="post">
+                {% csrf_token %}
+                
+                {% for fields in form %}
+                {{fields.label}}: <br>
+                {{fields}} <br><br>
+                {% endfor %}
+                    
+            <button type="submit" class="btn btn-outline-info">Register</button><br><br>
+        </form>
+
+            Have an account click <a href="{%url 'SignIn' %}">Here</a>
+        </div>
+        <br><br>
+    </div>
+</div>
+
+{% endblock %}

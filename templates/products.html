@@ -1,0 +1,67 @@
+{% extends "index.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="productcontainer">
+        <div class="heading">
+            <h2>Neer To You</h2>
+            <div class="row mt-4">
+                {% for item in item_product %}
+                <div class="col-md-3">
+                    <a href="{%url 'ViewProduct' item.id %}" class="text-body" style="text-decoration: none;">
+                        <div class="product-card">
+                            <img src="{{item.image.url}}" alt="">
+                            <div class="item-dis">
+                                <h4>₹ {{item.price}}</h4>
+                                <h6>{{item.name}}</h6>
+                    </a>
+                    <div class="row">
+                        <div class="col">
+                            <a href="" class="btn btn-outline-info btn-sm">Buy Now</a>
+                        </div>
+                        <div class="col">
+                            <a href="{%url 'AddTocart' item.id %}" class="btn btn-outline-warning btn-sm">Add To
+                                Cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+<br><br>
+<div class="container mt-5">
+    <div class="productcontainer">
+        <div class="heading">
+            <h2>Our Products</h2>
+            <div class="row mt-4">
+                {% for item in product %}
+                <div class="col-md-3">
+                    <a href="{%url 'ViewProduct' item.id %}" class="text-body" style="text-decoration: none;">
+                        <div class="product-card">
+                            <img src="{{item.image.url}}" alt="">
+                            <div class="item-dis">
+                                <h4>₹ {{item.price}}</h4>
+                                <h6>{{item.name}}</h6>
+                    </a>
+                    <div class="row">
+                        <div class="col">
+                            <a href="" class="btn btn-outline-info btn-sm">Buy Now</a>
+                        </div>
+                        <div class="col">
+                            <a href="{%url 'AddTocart' item.id %}" class="btn btn-outline-warning btn-sm">Add To
+                                Cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+
+
+{% endblock %}
