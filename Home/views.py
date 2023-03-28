@@ -18,7 +18,32 @@ def Index(request):
     return render(request,"index.html",context)
 
 def MerchantIndex(request):
-    return render(request,'merchant_Index.html')
+    product = Product.objects.filter(merchant = request.user)
+    context = {
+        "product":len(product)
+    }
+    return render(request,'merchant_Index.html',context)
+
+def AdminIndex(request):
+    form = UserAddForm()
+    user = User.objects.all()
+    if request.method == "POST":
+        form = UserAddForm(request.POST)
+        if form.is_valid():
+            new_user = form.save()
+            new_user.save()
+            group = Group.objects.get(name='merchant')
+            new_user.groups.add(group) 
+            
+            messages.info(request,'Merchant Registered Successfully')
+            return redirect('SignIn')
+    context = {
+        'form':form,
+        "user":user,
+    }
+    return render(request,'adminindex.html',context)
+
+
 
 def SignUp(request):
     form = UserAddForm()
@@ -54,7 +79,7 @@ def SignOut(request):
 
 def Inventory(request):
     form = ProductAddForm()
-    products = Product.objects.all()
+    products = Product.objects.filter(merchant = request.user)
     import pandas as pd
     
     data = pd.read_csv('Home/pincode.csv')

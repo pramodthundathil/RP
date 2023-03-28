@@ -1,0 +1,32 @@
+{% extends "merchant_Index.html" %}
+{% block content %}
+<style>
+    .itemcontainer{
+        width: 40%;
+        height: auto;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid black;
+        border-radius: 20px;
+        margin: auto;
+    }
+    .itemcontainer span{
+        color: brown;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="itemcontainer">
+        <h3>Delivery Address</h3>
+        <h4>Name: <span>{{prodata.name}}</span></h4>
+        <h4>House: <span>{{prodata.House}}</span></h4>
+        <h4>Place: <span>{{prodata.place}}</span></h4>
+        <h4>District: <span>{{prodata.district}}</span></h4>
+        <h4>Pincode: <span>{{prodata.pincode}}</span></h4>
+        <h4>State: <span>{{prodata.state}}</span></h4>
+        <h4>Country: <span>India</span></h4>
+
+    </div>
+</div>
+<br><br><br>
+{% endblock %}

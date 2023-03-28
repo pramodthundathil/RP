@@ -1,19 +1,27 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
-from Home.models import Product
+from Home.models import Product,ProfileData
 from .models import CartItems,CheckOuts
 from django.contrib.auth.decorators import login_required
 import json
 import pandas as pd
 import requests
+import razorpay
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.template.loader import render_to_string
+from django.http import HttpResponseBadRequest
 
 response1 = requests.get("https://ipgeolocation.abstractapi.com/v1/?api_key=32d8341ec1da4e57aba06d2b9b004c50")
-print(response1.status_code)
-print(response1.content)
-
+# print(response1.status_code)
+# print(response1.content)
+razorpay_client = razorpay.Client(
+  auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
 
 
 def Products(request):
+    response1 = requests.get("https://ipgeolocation.abstractapi.com/v1/?api_key=32d8341ec1da4e57aba06d2b9b004c50")
+    
     product = Product.objects.all()
     val = json.loads(response1.content)
     pincode = val["postal_code"]
@@ -24,7 +32,8 @@ def Products(request):
     item_product = Product.objects.filter(district__contains = district)
     context = {
         "product":product,
-        "item_product":item_product
+        "item_product":item_product,
+        "district":district
     }
     return render(request,"products.html",context)
 
@@ -38,6 +47,8 @@ def SearchProducts(request):
         return render(request, "search.html")
     
 def SearchByLocation(request):
+    response1 = requests.get("https://ipgeolocation.abstractapi.com/v1/?api_key=32d8341ec1da4e57aba06d2b9b004c50")
+    
     val = json.loads(response1.content)
     return render(request,'searchbylocation.html',{"postal":val["postal_code"],"place":val["city"],"png":val['flag']["png"]})
 
@@ -151,6 +162,7 @@ def DeleteCart(request,pk):
     CartItems.objects.get(id = pk).delete()
     return redirect('Cart')
     
+@login_required(login_url="SignIn")
 def CheckOut(request):
     cart = CartItems.objects.filter(user = request.user)
     total = 0
@@ -163,10 +175,76 @@ def CheckOut(request):
     context = {
         
         "total":total
-    }   
+    }
+    currency = 'INR'
+    amount = total * 100 # Rs. 200
+    
+
+  # Create a Razorpay Order Pyament Integration.....
+    razorpay_order = razorpay_client.order.create(dict(amount=amount,
+                          currency=currency,
+                          payment_capture='0'))
+
+  # order id of newly created order.
+    razorpay_order_id = razorpay_order["id"]
+    callback_url = 'paymenthandlercus'
+
+  # we need to pass these details to frontend.
+    
+    context['razorpay_order_id'] = razorpay_order_id
+    context['razorpay_merchant_key'] = settings.RAZOR_KEY_ID
+    context['razorpay_amount'] = amount
+    context['currency'] = currency
+    context['callback_url'] = callback_url 
+    context['slotid'] = ckout.id,
+    # context['amt'] = (product1.Product_price)*float(qty)
+       
     return render(request,"Makepayment.html",context)
+
+@csrf_exempt
+def paymenthandlercus(request):
+    if request.method == "POST":
+        try:
+            payment_id = request.POST.get('razorpay_payment_id', '')
+            razorpay_order_id = request.POST.get('razorpay_order_id', '')
+            signature = request.POST.get('razorpay_signature', '')
+            params_dict = {
+                'razorpay_order_id': razorpay_order_id,
+                'razorpay_payment_id': payment_id,
+                'razorpay_signature': signature
+            }
+
+      # verify the payment signature.
+            result = razorpay_client.utility.verify_payment_signature(params_dict)
+            if result is not None:
+                amount = 800 * 100 # Rs. 200
+                try:
+                    print("working 1")
+                    razorpay_client.payment.capture(payment_id, amount)
+                    return redirect('Success1')
+          # render success page on successful caputre of payment
+                except:
+                    print("working 2")
+                    return redirect('Success1')
+                    
+                    
+          # if there is an error while capturing payment.
+            else:
+                return render(request, 'paymentfail.html')
+        # if signature verification fails.    
+        except:
+            return HttpResponseBadRequest()
+        
+      # if we don't find the required parameters in POST data
+    else:
+  # if other than POST request is made.
+        return HttpResponseBadRequest()
     
-    
+def Success1(request):
+    return render(request,'Paymentconfirm.html')
+        
+        
+@login_required(login_url="SignIn")
 def Myorders(request):
     order = CheckOuts.objects.filter(user = request.user)
     context = {
@@ -174,14 +252,51 @@ def Myorders(request):
     }
     return render(request,"myorders.html",context)
 
+@login_required(login_url="SignIn")
 def deleteorderedhistory(request,pk):
     CheckOuts.objects.get(id = pk).delete()
     messages.info(request,"Product Deleted")
     return redirect("Myorders")
 
+@login_required(login_url="SignIn")
 def Customerorders(request):
     order = CheckOuts.objects.all()
     context = {
         "order":order
     }
     return render(request,"customerorder.html",context)
+
+@login_required(login_url="SignIn")
+def ChangeToDespached(request,pk):
+    order = CheckOuts.objects.get(id = pk)
+    order.status = "Item Despached"
+    order.save()
+    return redirect("Customerorders")
+
+@login_required(login_url="SignIn")
+def ChangeToDelivered(request,pk):
+    order = CheckOuts.objects.get(id = pk)
+    order.status = "Item Delivered"
+    order.save()
+    return redirect("Customerorders")
+
+@login_required(login_url="SignIn")
+def ChangeToCanceled(request,pk):
+    order = CheckOuts.objects.get(id = pk)
+    order.status = "Order Cancelled By Merchant"
+    order.save()
+    return redirect("Customerorders")
+
+@login_required(login_url="SignIn")
+def DelateOrderMerchant(request,pk):
+    CheckOuts.objects.get(id = pk)
+    messages.info(request,"Order Deleted")
+    return redirect("Customerorders")
+
+def ViewAddress(request,pk):
+    ckout = CheckOuts.objects.get(id = pk)
+    prodata = ProfileData.objects.get(user = ckout.user)
+    context = {
+        "prodata":prodata
+    }
+    return render(request,'customeraddress.html',context)

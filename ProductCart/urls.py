@@ -19,4 +19,12 @@ urlpatterns = [
     path("Myorders",views.Myorders,name="Myorders"),
     path("deleteorderedhistory/<int:pk>",views.deleteorderedhistory,name="deleteorderedhistory"),
     path("Customerorders",views.Customerorders,name="Customerorders"),
+    path("ChangeToDespached/<int:pk>",views.ChangeToDespached,name="ChangeToDespached"),
+    path("ChangeToDelivered/<int:pk>",views.ChangeToDelivered,name="ChangeToDelivered"),
+    path("ChangeToCanceled/<int:pk>",views.ChangeToCanceled,name="ChangeToCanceled"),
+    path("DelateOrderMerchant/<int:pk>",views.DelateOrderMerchant,name="DelateOrderMerchant"),
+    path("ViewAddress/<int:pk>",views.ViewAddress,name="ViewAddress"),
+    path("paymenthandlercus",views.paymenthandlercus,name="paymenthandlercus")
+    
+    
 ]

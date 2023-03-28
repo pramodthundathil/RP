@@ -49,7 +49,7 @@
             <div class="itemcontainer">
                 <img src="{{product.image.url}}" style="width:80%;height:60%"  alt="">
                 <br><br>
-                <a href="" type="submit" class="btn btn-info">Buy Now</a>
+                <a href="{%url 'AddTocart' product.id %}" type="submit" class="btn btn-info">Buy Now</a>
             </form>
                 <a href="{%url 'AddTocart' product.id %}" class="btn btn-warning">Add To Cart</a>
             </div>

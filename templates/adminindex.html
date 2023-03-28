@@ -1,0 +1,176 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{%static 'styles/styles.css' %}">
+    <link rel="stylesheet" href="{%static 'bootstrap/css/bootstrap.css' %}">
+    <script src="{%static 'bootstrap/js/bootstrap.js' %}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@200&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Audiowide|Sofia|Trirong">
+    <title>Regional Products</title>
+
+    <style>
+        body {
+            font-family: "Trirong", serif !important;
+        }
+
+        .merchantconatiner {
+            text-align: center;
+        }
+
+        .modal-body input {
+            width: 90%;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- top navbar -->
+    <div class="topnav">
+        <div class="navbartopitem">Contact: info@domain.com</div>
+        {% if request.user.is_authenticated %}
+        <div class="navbartopitem"><a href="{%url 'Profile' %}">Profile</a><a href="#">{{request.user.first_name}}</a><a
+                href="{%url 'SignOut' %}"> Logout</a> </div>
+        {% else %}
+        <div class="navbartopitem"><a href="{%url 'SignIn' %}">Login</a><a href="{%url 'SignUp' %}"> Register</a> </div>
+        {% endif %}
+    </div>
+    <!-- top navbar end  -->
+    <!-- navbar start -->
+
+    <div class="navbarcustom sticky-top" id="navbar">
+        <div class="navbar-item logo" style="margin-left: 0px;font-family: 'Sofia', sans-serif;"><a href="">Regional
+                Products</a> </div>
+        <div class="navbar-item" style="margin-left: 0px;"><a href="{%url 'Index' %}">Home</a></div>
+        <!-- <div class="navbar-item"><a href="{%url 'Products' %}">Products</a></div>
+    <div class="navbar-item"><a href="{%url 'Myorders' %}">My Orders</a></div>
+    <div class="navbar-item"><a href="{%url 'Cart' %}">Cart</a></div>
+    <div class="navbar-item"><a href="{%url 'SearchByLocation' %}">Search By Location</a></div>
+    <div class="navbar-item">
+      <form action="{%url 'SearchProducts' %}" method="post">
+        {% csrf_token %}
+        <input type="text" style="padding:3px" placeholder="Search" name="search" id="">
+        <button type="submit" class="btn btn-outline-success btn-sm">Search</button>
+      </form>
+    </div> -->
+    </div>
+
+    <!-- navbar end  -->
+
+    {% block content %}
+    <div class="container mt-5">
+        <div class="merchantconatiner">
+            <h6 style="color:red">{{form.errors}}</h6>
+            <button class="btn btn-outline-dark btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">Add
+                Merchant</button>
+        </div>
+
+    </div>
+    {% endblock %}
+
+    <!-- Button trigger modal -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Merchant</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% for fields in form %}
+
+                        {{fields.label}}: <br>
+                        {{fields}} <br><br>
+
+                        {% endfor %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-5">
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>Last Login</th>
+            </tr>
+            {% for item in user  %} 
+            <tr>
+                <td>{{item.first_name}}</td>
+                <td>{{item.username}}</td>
+                <td>{{item.email}}</td>
+                
+                <td>{{item.last_login}}</td>
+            </tr>
+            {% endfor %}
+
+        </table>
+    </div>
+    <br><br>
+    <footer>
+        <div class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <u>Get To Know Us</u>
+
+                        <br>
+                        <ul>
+                            <li>About</li>
+                            <li>Contact</li>
+                            <li>Careers</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <u>Contact Us</u>
+                        <ul>
+                            <li>ABC Street</li>
+                            <li>Kochi</li>
+                            <li>Eranakulam</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <u>Get Money With Us</u>
+                        <ul>
+                            <li>Create Mercant</li>
+                            <li>Messege</li>
+                            <li><input type="text" placeholder="message"> <button
+                                    class="btn btn-outline-success btn-sm">Sent</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footercontent" style="text-align: center;font-size:smaller">
+                    All rights @ Developer
+                </div>
+            </div>
+        </div>
+
+    </footer>
+</body>
+
+</html>
