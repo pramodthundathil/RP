@@ -29,6 +29,10 @@
     <div class="col-md-8">
         <div class="itemcontainer">
             <h3>Cart Items</h3><br><br>
+            {% for m in messages  %}
+            <h6 style="color:rgb(247, 76, 104)">{{m}}</h6>
+                
+            {% endfor %}
             <table class="table">
                 <tr>
                     <th>Item</th>

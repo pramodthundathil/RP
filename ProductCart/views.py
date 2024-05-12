@@ -165,6 +165,12 @@ def DeleteCart(request,pk):
 @login_required(login_url="SignIn")
 def CheckOut(request):
     cart = CartItems.objects.filter(user = request.user)
+    try:
+        pdate = ProfileData.objects.get(user = request.user)
+    except:
+        messages.info(request,"Please Update Your Profile to Purchase Item in The cart")
+        return redirect("Profile")
+    
     total = 0
     for items in cart:
         ckout = CheckOuts.objects.create(Product = items.product,quantity = items.quantity,price = items.price,user = request.user, status = "Item Ordered")
@@ -179,7 +185,9 @@ def CheckOut(request):
     currency = 'INR'
     amount = total * 100 # Rs. 200
     
-
+    if total <= 0:
+        messages.info(request,"Your Cart is Empty..")
+        return redirect("Cart")
   # Create a Razorpay Order Pyament Integration.....
     razorpay_order = razorpay_client.order.create(dict(amount=amount,
                           currency=currency,
@@ -198,6 +206,7 @@ def CheckOut(request):
     context['callback_url'] = callback_url 
     context['slotid'] = ckout.id,
     # context['amt'] = (product1.Product_price)*float(qty)
+    
        
     return render(request,"Makepayment.html",context)
 
