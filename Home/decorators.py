@@ -9,6 +9,8 @@ def Admin_Only(view_func):
             return redirect('MerchantIndex')
         if group == "admin":
             return redirect('AdminIndex')
+        if group == "hub":
+            return redirect('HubIndex')
         else:
             return view_func(request,*args,**kwargs)
     return wrapper_func

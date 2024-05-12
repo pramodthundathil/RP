@@ -6,7 +6,7 @@ from .forms import UserAddForm,ProductAddForm
 from .decorators import Admin_Only
 import pandas as pd
 from .models import Product,ProfileData
-
+from ProductCart.models import CheckOuts
 
 
 @Admin_Only
@@ -19,8 +19,12 @@ def Index(request):
 
 def MerchantIndex(request):
     product = Product.objects.filter(merchant = request.user)
+    order = CheckOuts.objects.filter(Product__merchant = request.user)
+    pendingorder = CheckOuts.objects.filter(Product__merchant = request.user).exclude(status = "Item Delivered" )
     context = {
-        "product":len(product)
+        "product":len(product),
+        "ordercount":len(order),
+        "pendingorder":len(pendingorder)
     }
     return render(request,'merchant_Index.html',context)
 
@@ -36,12 +40,61 @@ def AdminIndex(request):
             new_user.groups.add(group) 
             
             messages.info(request,'Merchant Registered Successfully')
-            return redirect('SignIn')
+            return redirect('AdminIndex')
     context = {
         'form':form,
         "user":user,
     }
     return render(request,'adminindex.html',context)
+
+
+def HubAdd(request):
+    form = UserAddForm()
+    user = User.objects.all()
+    data = pd.read_csv('Home/pincode.csv')
+    pincode = []
+    for i in data.values:
+        pincode.append(i[-1])
+    pincode.sort()
+    if request.method == "POST":
+        form = UserAddForm(request.POST)
+        
+        pin = request.POST['pin']
+        phone = request.POST["phone"]
+
+        try:
+            listdata = data[data["Pincode"] == int(pin)]
+            district = listdata.values[0][-3]
+            city = listdata.values[0][1]
+            place = listdata.values[0][0]
+            state = listdata.values[0][-2]
+        except:
+            messages.info(request,"Invalid pincode")
+            return redirect("HubAdd")
+            
+        if form.is_valid():
+            new_user = form.save()
+            new_user.save()
+            group = Group.objects.get(name='hub')
+            new_user.groups.add(group) 
+            new_user.save()
+            pdata = ProfileData.objects.create(name = "Hub",pincode = pin,House = "Hub",district = district,place = place,phone = phone,state = state,user = new_user)
+            pdata.save()
+            
+            messages.info(request,'Hub Registered Successfully Address: {}, {},{}'.format(district,place,state))
+            return redirect('HubAdd')
+    context = {
+        'form':form,
+        "user":user,
+        "pincode":pincode,
+
+    }
+    return render(request,'adminhuadd.html',context)
+
+def hubdelete(request,pk):
+    User.objects.get(id = pk).delete()
+    messages.info(request,"Item deleted.....")
+    return redirect("AdminIndex")
 
 
 
@@ -171,4 +224,15 @@ def Profile(request):
         "prodata":prodata
     }
     return render(request,'profile.html',context)
+
+
+def HubIndex(request):
+    profile = ProfileData.objects.get(user = request.user)
+    print(profile,"------------------------------------------")
+    order = CheckOuts.objects.filter(hub = profile)
+
+    context = {
+        "ordercount":len(order)
+    }
+    return render(request,"hubindex.html",context)
 

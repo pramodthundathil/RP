@@ -55,6 +55,7 @@
         <div class="navbar-item logo" style="margin-left: 0px;font-family: 'Sofia', sans-serif;"><a href="">Regional
                 Products</a> </div>
         <div class="navbar-item" style="margin-left: 0px;"><a href="{%url 'Index' %}">Home</a></div>
+        <div class="navbar-item" style="margin-left: 0px;"><a href="{%url 'HubAdd' %}">Distribution Hub</a></div>
         <!-- <div class="navbar-item"><a href="{%url 'Products' %}">Products</a></div>
     <div class="navbar-item"><a href="{%url 'Myorders' %}">My Orders</a></div>
     <div class="navbar-item"><a href="{%url 'Cart' %}">Cart</a></div>
@@ -71,20 +72,52 @@
     <!-- navbar end  -->
 
     {% block content %}
+
     <div class="container mt-5">
         <div class="merchantconatiner">
-            <h6 style="color:red">{{form.errors}}</h6>
+            <h6 style="color:red" class="text-center">{{form.errors}}</h6>
             <button class="btn btn-outline-dark btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">Add
                 Merchant</button>
         </div>
 
     </div>
-    {% endblock %}
+    {% for m in messages  %}
+<h6 style="color:rgb(235, 45, 77)" class="text-center">{{m}}</h6>
+    
+{% endfor %}
 
     <!-- Button trigger modal -->
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   
+    <div class="container mt-5">
+        <h3>Merchant List</h3>
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>Last Login</th>
+                <th>Action</th>
+            </tr>
+            {% for item in user  %} 
+            {% if item.groups.all.0.name == "merchant"%}
+            <tr>
+                <td>{{item.first_name}}</td>
+                <td>{{item.username}}</td>
+                <td>{{item.email}}</td>
+                
+                <td>{{item.last_login}}</td>
+            <td><a href="{%url 'hubdelete' item.id %}" onclick="return confirm('Are You Sure Want to Delete ?')" class="btn btn-outline-danger">delete</a></td>
+
+            </tr>
+            {% endif %}
+            {% endfor %}
+
+        </table>
+    </div>
+
+     <!-- Modal -->
+     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -98,8 +131,10 @@
 
                         {{fields.label}}: <br>
                         {{fields}} <br><br>
-
                         {% endfor %}
+
+                       
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -110,27 +145,12 @@
             </div>
         </div>
     </div>
-    <div class="container mt-5">
-        <table class="table">
-            <tr>
-                <th>Name</th>
-                <th>User Name</th>
-                <th>Email</th>
-                <th>Last Login</th>
-            </tr>
-            {% for item in user  %} 
-            <tr>
-                <td>{{item.first_name}}</td>
-                <td>{{item.username}}</td>
-                <td>{{item.email}}</td>
-                
-                <td>{{item.last_login}}</td>
-            </tr>
-            {% endfor %}
 
-        </table>
-    </div>
+
+{% endblock %}
+
     <br><br>
+
     <footer>
         <div class="footer">
             <div class="container">
@@ -153,6 +173,9 @@
                             <li>Eranakulam</li>
                         </ul>
                     </div>
+
+
+
                     <div class="col-md-4">
                         <u>Get Money With Us</u>
                         <ul>
@@ -170,7 +193,10 @@
             </div>
         </div>
 
+
     </footer>
+
+    
 </body>
 
 </html>

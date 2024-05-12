@@ -1,5 +1,5 @@
 from django.db import models
-from Home.models import Product
+from Home.models import Product,ProfileData
 from django.contrib.auth.models import User
 
 
@@ -21,4 +21,5 @@ class CheckOuts(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     status = models.CharField(max_length=255)
     py_status = models.BooleanField(default=False)
+    hub = models.ForeignKey(ProfileData,on_delete=models.SET_NULL,null=True, blank=True)
     

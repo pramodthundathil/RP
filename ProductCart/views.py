@@ -260,25 +260,52 @@ def deleteorderedhistory(request,pk):
 
 @login_required(login_url="SignIn")
 def Customerorders(request):
-    order = CheckOuts.objects.all()
+    order = CheckOuts.objects.filter(Product__merchant = request.user)
+    hub_profile = ProfileData.objects.all()
     context = {
-        "order":order
+        "order":order,
+        "hub_profile":hub_profile
     }
     return render(request,"customerorder.html",context)
+
+@login_required(login_url="SignIn")
+def AssignToHub(request,pk):
+    cheout = CheckOuts.objects.get(id = pk)
+    if request.method == "POST":
+        hub = ProfileData.objects.get(id = int(request.POST['hub']))
+        cheout.hub = hub 
+        cheout.save()
+        messages.info(request,"Hub assigened......")
+        return redirect("Customerorders")
+    return redirect("Customerorders")
 
 @login_required(login_url="SignIn")
 def ChangeToDespached(request,pk):
     order = CheckOuts.objects.get(id = pk)
     order.status = "Item Despached"
     order.save()
-    return redirect("Customerorders")
+    return redirect("CustomerordersHub")
+
+@login_required(login_url="SignIn")
+def ChangeToAccepetd(request,pk):
+    order = CheckOuts.objects.get(id = pk)
+    order.status = "Item Accepted By Hub"
+    order.save()
+    return redirect("CustomerordersHub")
+
+@login_required(login_url="SignIn")
+def ChangeToReceivedByHub(request,pk):
+    order = CheckOuts.objects.get(id = pk)
+    order.status = "Item Received on Hub"
+    order.save()
+    return redirect("CustomerordersHub")
 
 @login_required(login_url="SignIn")
 def ChangeToDelivered(request,pk):
     order = CheckOuts.objects.get(id = pk)
     order.status = "Item Delivered"
     order.save()
-    return redirect("Customerorders")
+    return redirect("CustomerordersHub")
 
 @login_required(login_url="SignIn")
 def ChangeToCanceled(request,pk):
@@ -300,3 +327,15 @@ def ViewAddress(request,pk):
         "prodata":prodata
     }
     return render(request,'customeraddress.html',context)
+
+
+def CustomerordersHub(request):
+    profile = ProfileData.objects.get(user = request.user)
+    print(profile,"------------------------------------------")
+    order = CheckOuts.objects.filter(hub = profile)
+    hub_profile = ProfileData.objects.all()
+    context = {
+        "order":order,
+        "hub_profile":hub_profile
+    }
+    return render(request,"customerordershub.html",context)

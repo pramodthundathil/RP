@@ -1,0 +1,78 @@
+{% extends 'adminindex.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="merchantconatiner">
+        <h6 style="color:red">{{form.errors}}</h6>
+        <button class="btn btn-outline-dark btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Hub</button>
+    </div>
+
+</div>
+{% for m in messages  %}
+<h6 style="color:rgb(235, 45, 77)" class="text-center">{{m}}</h6>
+    
+{% endfor %}
+
+<div class="container mt-5">
+    <h3>Hub List</h3>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>Last Login</th>
+            <th>action</th>
+        </tr>
+        {% for item in user  %} 
+        {% if item.groups.all.0.name == "hub"%}
+        <tr>
+            <td>{{item.first_name}}</td>
+            <td>{{item.username}}</td>
+            <td>{{item.email}}</td>
+            
+            <td>{{item.last_login}}</td>
+            <td><a href="{%url 'hubdelete' item.id %}" onclick="return confirm('Are You Sure Want to Delete ?')" class="btn btn-outline-danger">delete</a></td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+
+    </table>
+</div>
+
+
+ <!-- Modal -->
+ <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Hub</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for fields in form %}
+
+                    {{fields.label}}: <br>
+                    {{fields}} <br><br>
+
+                    {% endfor %}
+                    <label for="">Phone Number</label><br>
+                    <input type="number"  placeholder="" required name="phone" id=""><br><br>
+                    <label for="">Pincode</label><br>
+                    <input type="number" placeholder="Pincode"  list="items" name="pin"></td>
+                <datalist id="items">
+                    {% for i in pincode %}
+                        <option value="{{i}}">
+                    {% endfor %}
+                </datalist>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

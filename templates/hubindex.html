@@ -43,23 +43,7 @@
   </div>
   <!-- top navbar end  -->
   <!-- navbar start -->
-  {% if request.user.groups.all.0.name == 'merchant' %}
 
-  <div class="navbarcustom sticky-top" id="navbar">
-    <div class="navbar-item logo" style="margin-left: 0px;font-family: 'Sofia', sans-serif;"><a href="">Regional Products</a> </div>
-    <div class="navbar-item" style="margin-left: 0px;"><a href="{%url 'Index' %}">Home</a></div>
-    <div class="navbar-item"><a href="{%url 'Inventory' %}">Inventory</a></div>
-    <div class="navbar-item"><a href="{%url 'Customerorders' %}">Customer Orders</a></div>
-    <!-- <div class="navbar-item"><a href="">My Products</a></div>
-    <div class="navbar-item"><a href="">Customer Messages</a></div> -->
-    <div class="navbar-item">
-      <form action="">
-        <input type="text" style="padding:3px" placeholder="Search" name="" id="">
-        <button class="btn btn-outline-success btn-sm">Search</button>
-      </form>
-    </div>
-  </div>
-  {% elif request.user.groups.all.0.name == 'hub' %}
   <div class="navbarcustom sticky-top" id="navbar">
     <div class="navbar-item logo" style="margin-left: 0px;font-family: 'Sofia', sans-serif;"><a href="">Regional Products</a> </div>
     <div class="navbar-item" style="margin-left: 0px;"><a href="{%url 'Index' %}">Home</a></div>
@@ -74,7 +58,6 @@
       </form>
     </div>
   </div>
-  {% endif %}
 
   <!-- navbar end  -->
 
@@ -112,21 +95,10 @@
 
     <div class="container-fluid cards">
       <div class="row">
+       
         <div class="col-md-4">
           <div class="card-1">
-            <h2>Total Products</h2>
-            <br><br><br><br>
-            <h1>{{product}}</h1>
-            
-            <br>
-            <a href="{%url 'Inventory' %}" class="nav-item">View</a>
-
-          </div>
-
-        </div>
-        <div class="col-md-4">
-          <div class="card-1">
-            <h2>Total Orders</h2>
+            <h2>Order Requests</h2>
             <br><br><br><br>
             <h1>{{ordercount}}</h1>
             <br>
@@ -135,17 +107,7 @@
           </div>
 
         </div>
-        <div class="col-md-4">
-          <div class="card-1">
-            <h2>Pending Orders</h2>
-            <br><br><br><br>
-            <h1>{{pendingorder}}</h1>
-            <br>
-            <a href="{%url 'CustomerordersHub' %}" class="nav-item">View</a>
-
-          </div>
-
-        </div>
+        
 
       </div>
     </div>

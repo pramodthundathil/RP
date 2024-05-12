@@ -2,12 +2,19 @@
 {% block content %}
 
 <div class="container mt-5">
+    <h4>Customer Order Details</h4>
+    {% for m in messages  %}
+            <h6 class="text-center" style="color:rgb(70, 19, 223)">{{m}}</h6>
+                
+            {% endfor %}
+                
     <table class="table">
         <tr>
             <th>Ordered Item</th>
             <th>Quantity</th>
             <th>Price</th>
             <th>date</th>
+            <th>Assigned Hub</th>
             <th>Status</th>
             <th>View Customer</th>
             <th>Actions</th>
@@ -21,12 +28,31 @@
             <td>{{i.quantity}}</td>
             <td>{{i.price}}</td>
             <td>{{i.date}}</td>
+            <td>{{i.hub.user}},{{i.hub.place}},{{i.hub.district}}</td>
             <td>{{i.status}}</td>
             <td><a href="{%url 'ViewAddress' i.id%}" class="btn btn-outline-dark" >View</a></td>
-            <td><a href="{%url 'ChangeToDespached' i.id%}" class="btn btn-outline-info btn-sm">Despach</a>
+            <td>
+                Assign Product To Hub For delivery: <br>
+                <form action="{%url 'AssignToHub' i.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <select name="hub" class="form-control" id="">
+                            <option value="" selected disabled>--------------------</option>
+                            {% for i in  hub_profile%}
+                            {% if i.user.groups.all.0.name == 'hub' %}
+                            <option value="{{i.id}}">{{i.user}}, {{i.place}} {{i.district}}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Assign</button>
+                      </div>
+                </form>
+                
+                
+                <!-- <a href="{%url 'ChangeToDespached' i.id%}" class="btn btn-outline-info btn-sm">Despach</a> -->
                 <a href="{%url 'ChangeToCanceled' i.id%}" class="btn btn-outline-warning btn-sm">Cancel</a>
                 <a href="{%url 'DelateOrderMerchant' i.id%}" class="btn btn-outline-danger btn-sm">Delete</a>
-                <a href="{%url 'ChangeToDelivered' i.id%}" class="btn btn-outline-success btn-sm">Delivered</a>
+                <!-- <a href="{%url 'ChangeToDelivered' i.id%}" class="btn btn-outline-success btn-sm">Delivered</a> -->
             </td>
         </tr>
         <!-- Button trigger modal -->

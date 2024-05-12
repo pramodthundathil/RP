@@ -10,5 +10,9 @@ urlpatterns = [
     path("Inventory",views.Inventory,name="Inventory"),
     path("Profile",views.Profile,name="Profile"),
     path("AdminIndex",views.AdminIndex,name="AdminIndex"),
+    path("HubAdd",views.HubAdd,name="HubAdd"),
+    path("hubdelete/<int:pk>",views.hubdelete,name="hubdelete"),
+    path("HubIndex",views.HubIndex,name="HubIndex")
+
 
 ]
